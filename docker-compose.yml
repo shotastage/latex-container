@@ -1,0 +1,10 @@
+version: '3.9'
+services:
+  japanese-latex:
+    build: .
+    image: japanese-latex:latest
+    container_name: japanese-latex
+    working_dir: /home/latex/work
+    volumes:
+      - ./sample:/home/latex/work
+    tty: true

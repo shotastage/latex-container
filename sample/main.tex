@@ -1,0 +1,44 @@
+% -*- coding: utf-8 -*-
+% 日本語 LaTeX サンプル (uplatex + dvipdfmx)
+\documentclass[uplatex,a4paper,12pt]{jsarticle}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath,amssymb}
+\usepackage{url}
+
+\title{日本語 LaTeX コンテナ動作確認}
+\author{テストユーザ}
+\date{\\Compiled: \today}
+
+\begin{document}
+\maketitle
+
+\section{概要}
+これは Docker コンテナ上で日本語 LaTeX (uplatex) を用いてビルドした PDF のサンプルです。\\
+XeLaTeX や LuaLaTeX を使う場合はコマンドを切り替えてください。
+
+\section{数式例}
+以下に数式を示します。
+\begin{align}
+  f(x) &= \int_0^1 x^2 \, dx = \frac{1}{3} \\
+  E &= mc^2
+\end{align}
+
+\section{ハイパーリンク}
+GitHub: \url{https://github.com/}
+
+\section{画像例}
+% 画像を試す場合は sample フォルダに image.png を置いて次を有効化:
+%\begin{figure}[h]
+%  \centering
+%  \includegraphics[width=0.4\textwidth]{image.png}
+%  \caption{サンプル画像}
+%\end{figure}
+
+\section{LuaLaTeX / XeLaTeX}
+LuaLaTeX で組版: `latexmk -lualatex main.tex`\\
+XeLaTeX で組版: `latexmk -xelatex main.tex`
+
+\section{終了}
+以上で動作確認サンプルは完了です。
+\end{document}
