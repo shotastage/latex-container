@@ -18,7 +18,7 @@ RUN apt-get update && \
     fonts-noto-cjk fonts-ipaexfont \
     texlive-base texlive-latex-base texlive-latex-recommended texlive-latex-extra \
     texlive-fonts-recommended texlive-fonts-extra texlive-lang-japanese texlive-science \
-    texlive-xetex texlive-luatex latexmk && \
+    texlive-xetex texlive-luatex latexmk texlive-bibtex-extra biber && \
     echo "ja_JP.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen ja_JP.UTF-8 && \
     update-ca-certificates && \

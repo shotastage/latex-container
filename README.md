@@ -33,14 +33,23 @@ latexmk -xelatex main.tex  # XeLaTeX
 ```
 生成結果は `main.pdf`。
 
-## パッケージ追加
-容量最適化のためフルインストールではありません。追加が必要な場合:
+## Bibliography (BibTeX / Biber)
+このイメージには `texlive-bibtex-extra` と `biber` が含まれ、BibLaTeX / Biber を利用できます。
+
+サンプル: `sample/main_biblatex.tex` と `sample/refs.bib` を用意しています。
 ```bash
-# 一時的に root になる
-docker run --rm -it --user root japanese-latex:latest bash
-apt-get update && apt-get install -y texlive-bibtex-extra biber && rm -rf /var/lib/apt/lists/*
+# BibLaTeX サンプル PDF 生成
+make pdf-bib          # => sample/main_biblatex.pdf
+
+# 監視モード (変更自動再ビルド)
+make watch TEX=main_biblatex.tex
 ```
-あるいは Dockerfile を編集し再ビルド。
+`latexmk` は文書中の `\usepackage{biblatex}` と `.bcf` の変更を検知し自動的に Biber を呼び出します。
+
+従来型 BibTeX を使う場合 (例: \bibliographystyle{jplain} 等) も同梱の `bibtex` コマンドをそのまま利用できます。`latexmk` が必要回数再コンパイルを自動処理します。
+
+## パッケージ追加
+さらに必要なパッケージがあれば Dockerfile に追記し再ビルドしてください (例: `texlive-pictures`, `texlive-generic-extra` など)。
 
 ## tlmgr について
 Debian の TeXLive は OS パッケージ管理下のため tlmgr での更新は推奨されません。追加パッケージは apt 経由で対応してください。

@@ -1,0 +1,29 @@
+% 日本語 + BibLaTeX サンプル (uplatex)
+\documentclass[uplatex,a4paper,12pt]{jsarticle}
+\usepackage{hyperref}
+\usepackage{amsmath,amssymb}
+\usepackage{biblatex}
+\addbibresource{refs.bib}
+
+\title{BibLaTeX / Biber 動作確認}
+\author{テストユーザ}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{引用例}
+TeX の標準的解説書は \cite{knuth1984texbook} です。LaTeX の導入として \cite{lamport1994latex}。\\
+パッケージ \cite{biblatex} は柔軟な引用スタイルを提供します。
+
+\section{複数引用}
+複数同時引用: \cite{knuth1984texbook,lamport1994latex}。
+
+\section{数式}
+\begin{equation}
+E = mc^2
+\end{equation}
+
+\printbibliography
+
+\end{document}

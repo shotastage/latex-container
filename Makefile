@@ -13,21 +13,24 @@ DOCKERFILE ?= Dockerfile
 WORKDIR_HOST ?= $(PWD)/sample
 WORKDIR_CONT ?= /home/latex/work
 TEX ?= main.tex
+TEX_BIB ?= main_biblatex.tex
 ENGINE ?= uplatex        # uplatex | lualatex | xelatex
 LATEXMK_OPTS ?= -silent -interaction=nonstopmode
 CONTAINER_NAME ?= japanese-latex-tmp
 PDF := $(WORKDIR_HOST)/$(basename $(TEX)).pdf
+PDF_BIB := $(WORKDIR_HOST)/$(basename $(TEX_BIB)).pdf
 
 ENGINE_FLAG_uplatex =
 ENGINE_FLAG_lualatex = -lualatex
 ENGINE_FLAG_xelatex = -xelatex
 ENGINE_FLAG = $(ENGINE_FLAG_$(ENGINE))
 
-.PHONY: image pdf watch clean open shell help
+.PHONY: image pdf pdf-bib watch clean open shell help
 
 help:
-	@echo "Targets: image pdf watch clean open shell"
+	@echo "Targets: image pdf pdf-bib watch clean open shell"
 	@echo "Variables: IMAGE TEX ENGINE (uplatex|lualatex|xelatex)"
+	@echo "Bibliography sample: TEX_BIB=$(TEX_BIB)"
 
 image: $(DOCKERFILE)
 	docker build -t $(IMAGE) -f $(DOCKERFILE) .
@@ -41,6 +44,15 @@ pdf: image $(WORKDIR_HOST)/$(TEX)
 		$(IMAGE) latexmk $(ENGINE_FLAG) $(LATEXMK_OPTS) $(TEX)
 	@echo "==> Output: $(PDF)"
 	@test -f $(PDF) || (echo "PDF not generated" && exit 1)
+
+pdf-bib: image $(WORKDIR_HOST)/$(TEX_BIB)
+	@echo "==> Building bibliography sample $(TEX_BIB) (ENGINE=$(ENGINE))"
+	docker run --rm \
+		-v $(WORKDIR_HOST):$(WORKDIR_CONT) \
+		-w $(WORKDIR_CONT) \
+		$(IMAGE) latexmk $(ENGINE_FLAG) $(LATEXMK_OPTS) $(TEX_BIB)
+	@echo "==> Output: $(PDF_BIB)"
+	@test -f $(PDF_BIB) || (echo "PDF (bib) not generated" && exit 1)
 
 # 監視モード (ログを流す). Ctrl+C で止める
 watch: image $(WORKDIR_HOST)/$(TEX)
@@ -58,7 +70,8 @@ clean:
 	@echo "==> Cleaning auxiliary files"
 	@rm -f $(WORKDIR_HOST)/*.aux $(WORKDIR_HOST)/*.log $(WORKDIR_HOST)/*.out \
 		$(WORKDIR_HOST)/*.dvi $(WORKDIR_HOST)/*.fdb_latexmk $(WORKDIR_HOST)/*.fls \
-		$(WORKDIR_HOST)/*.synctex.gz
+		$(WORKDIR_HOST)/*.synctex.gz $(WORKDIR_HOST)/*.bbl $(WORKDIR_HOST)/*.bcf \
+		$(WORKDIR_HOST)/*.blg $(WORKDIR_HOST)/*.run.xml
 	@echo "==> Done"
 
 open: $(PDF)
